@@ -310,10 +310,10 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 99);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(186, 52);
+            this.label1.Size = new System.Drawing.Size(198, 52);
             this.label1.TabIndex = 3;
             this.label1.Text = "Example Searches:\r\n\r\nSearch columns: DbName.dbo.*.chart\r\nSearch tables and procs:" +
-    " dbo.*";
+    " DbName.dbo.*";
             // 
             // label2
             // 
