@@ -22,7 +22,7 @@ namespace SQLSearcher
         }
 
 
-        public Task CacheDatabases(SchemaRepository repo)
+        public void CacheDatabases(SchemaRepository repo)
         {
             //if (_taskSource != null)
             //{
@@ -40,7 +40,6 @@ namespace SQLSearcher
             //_worker.RunWorkerAsync();
 
             repo.GetDatabases();
-            return null;
 
             //return _taskSource.Task;
         }

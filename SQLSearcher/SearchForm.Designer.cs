@@ -63,6 +63,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.searchButton = new System.Windows.Forms.Button();
+            this.statusStrip = new System.Windows.Forms.StatusStrip();
+            this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             databaseColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             schemaColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             tableCoumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -74,6 +76,7 @@
             this.columnResultPage.SuspendLayout();
             this.procedureResultPage.SuspendLayout();
             this.procResultContextMenu.SuspendLayout();
+            this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // databaseColumn
@@ -119,14 +122,16 @@
             // 
             // searchResultsTabControl
             // 
+            this.searchResultsTabControl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.searchResultsTabControl.Controls.Add(this.tableResultPage);
             this.searchResultsTabControl.Controls.Add(this.columnResultPage);
             this.searchResultsTabControl.Controls.Add(this.procedureResultPage);
-            this.searchResultsTabControl.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.searchResultsTabControl.Location = new System.Drawing.Point(0, 217);
             this.searchResultsTabControl.Name = "searchResultsTabControl";
             this.searchResultsTabControl.SelectedIndex = 0;
-            this.searchResultsTabControl.Size = new System.Drawing.Size(935, 373);
+            this.searchResultsTabControl.Size = new System.Drawing.Size(935, 348);
             this.searchResultsTabControl.TabIndex = 2;
             // 
             // tableResultPage
@@ -135,7 +140,7 @@
             this.tableResultPage.Location = new System.Drawing.Point(4, 22);
             this.tableResultPage.Name = "tableResultPage";
             this.tableResultPage.Padding = new System.Windows.Forms.Padding(3);
-            this.tableResultPage.Size = new System.Drawing.Size(927, 347);
+            this.tableResultPage.Size = new System.Drawing.Size(927, 322);
             this.tableResultPage.TabIndex = 0;
             this.tableResultPage.Text = "Table";
             this.tableResultPage.UseVisualStyleBackColor = true;
@@ -152,7 +157,7 @@
             this.tableSearchResults.FullRowSelect = true;
             this.tableSearchResults.Location = new System.Drawing.Point(3, 3);
             this.tableSearchResults.Name = "tableSearchResults";
-            this.tableSearchResults.Size = new System.Drawing.Size(921, 341);
+            this.tableSearchResults.Size = new System.Drawing.Size(921, 316);
             this.tableSearchResults.TabIndex = 0;
             this.tableSearchResults.UseCompatibleStateImageBehavior = false;
             this.tableSearchResults.View = System.Windows.Forms.View.Details;
@@ -183,7 +188,7 @@
             this.columnResultPage.Controls.Add(this.columnSearchResults);
             this.columnResultPage.Location = new System.Drawing.Point(4, 22);
             this.columnResultPage.Name = "columnResultPage";
-            this.columnResultPage.Size = new System.Drawing.Size(927, 347);
+            this.columnResultPage.Size = new System.Drawing.Size(927, 316);
             this.columnResultPage.TabIndex = 2;
             this.columnResultPage.Text = "Columns";
             this.columnResultPage.UseVisualStyleBackColor = true;
@@ -204,7 +209,7 @@
             this.columnSearchResults.FullRowSelect = true;
             this.columnSearchResults.Location = new System.Drawing.Point(3, 3);
             this.columnSearchResults.Name = "columnSearchResults";
-            this.columnSearchResults.Size = new System.Drawing.Size(927, 347);
+            this.columnSearchResults.Size = new System.Drawing.Size(927, 316);
             this.columnSearchResults.TabIndex = 1;
             this.columnSearchResults.UseCompatibleStateImageBehavior = false;
             this.columnSearchResults.View = System.Windows.Forms.View.Details;
@@ -245,7 +250,7 @@
             this.procedureResultPage.Location = new System.Drawing.Point(4, 22);
             this.procedureResultPage.Name = "procedureResultPage";
             this.procedureResultPage.Padding = new System.Windows.Forms.Padding(3);
-            this.procedureResultPage.Size = new System.Drawing.Size(927, 347);
+            this.procedureResultPage.Size = new System.Drawing.Size(927, 316);
             this.procedureResultPage.TabIndex = 1;
             this.procedureResultPage.Text = "Stored Procedures";
             this.procedureResultPage.UseVisualStyleBackColor = true;
@@ -263,7 +268,7 @@
             this.procedureSearchResults.FullRowSelect = true;
             this.procedureSearchResults.Location = new System.Drawing.Point(3, 3);
             this.procedureSearchResults.Name = "procedureSearchResults";
-            this.procedureSearchResults.Size = new System.Drawing.Size(921, 341);
+            this.procedureSearchResults.Size = new System.Drawing.Size(921, 310);
             this.procedureSearchResults.TabIndex = 1;
             this.procedureSearchResults.UseCompatibleStateImageBehavior = false;
             this.procedureSearchResults.View = System.Windows.Forms.View.Details;
@@ -343,11 +348,26 @@
             this.searchButton.UseVisualStyleBackColor = true;
             this.searchButton.Click += new System.EventHandler(this.SearchButton_Click);
             // 
+            // statusStrip
+            // 
+            this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.statusLabel});
+            this.statusStrip.Location = new System.Drawing.Point(0, 568);
+            this.statusStrip.Name = "statusStrip";
+            this.statusStrip.Size = new System.Drawing.Size(935, 22);
+            this.statusStrip.TabIndex = 7;
+            // 
+            // statusLabel
+            // 
+            this.statusLabel.Name = "statusLabel";
+            this.statusLabel.Size = new System.Drawing.Size(0, 17);
+            // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 590);
+            this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.searchButton);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -364,6 +384,8 @@
             this.columnResultPage.ResumeLayout(false);
             this.procedureResultPage.ResumeLayout(false);
             this.procResultContextMenu.ResumeLayout(false);
+            this.statusStrip.ResumeLayout(false);
+            this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -400,5 +422,7 @@
         private System.Windows.Forms.ContextMenuStrip procResultContextMenu;
         private System.Windows.Forms.ToolStripMenuItem viewProcTextMenuStripOption;
         private System.Windows.Forms.ColumnHeader fkColumn;
+        private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripStatusLabel statusLabel;
     }
 }

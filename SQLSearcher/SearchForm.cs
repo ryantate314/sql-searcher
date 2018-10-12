@@ -17,49 +17,65 @@ namespace SQLSearcher
         private SchemaRepository _repo;
         private CacheLoader _cacheLoader;
 
+        private bool _searchDisabled;
+
         public SearchForm()
         {
             InitializeComponent();
             _cacheLoader = new CacheLoader();
-            NewRepo();
+            _searchDisabled = true;
+
+            NewRepo().Wait();
         }
 
-        private void searchBox_KeyDown(object sender, KeyEventArgs e)
+        private async void searchBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.F5)
             {
-                PerformSearch();
+                e.Handled = e.SuppressKeyPress = true; //Prevent beep
+                await PerformSearch();
             }
         }
 
-        private void SearchForm_KeyDown(object sender, KeyEventArgs e)
+        private async void SearchForm_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F5)
             {
-                PerformSearch();
+                await PerformSearch();
             }
         }
 
-        private void PerformSearch()
+        private async Task PerformSearch()
         {
+            if (_searchDisabled)
+            {
+                return;
+            }
+
             if (_repo.ConnectionString != GetConnectionString(serverName.Text))
             {
-                NewRepo();
+                await NewRepo();
             }
-            //_cacheLoader.Task.Wait();//Wait for database names to finish populating
             Search search = SearchParser.Parse(searchBox.Text);
             if (search == null)
             {
                 MessageBox.Show("Invalid Search Terms");
+                return;
             }
+
+            Lock("Searching...");
             try
             {
-                SearchResultViewModel result = search.Execute(_repo);
+                SearchResultViewModel result = await Task.Run(() => search.Execute(_repo));
                 RenderResults(result);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Error performing query: " + ex.Message, "Query Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            finally
+            {
+                Unlock();
             }
         }
 
@@ -153,7 +169,7 @@ namespace SQLSearcher
             {
                 procedureSearchResults.EndUpdate();
             }
-            
+
         }
 
         private static string GetConnectionString(string server)
@@ -161,42 +177,50 @@ namespace SQLSearcher
             return $"Data Source={server};Integrated Security=True;Pooling=False";
         }
 
-        private void ViewColumnsToolStripMenuItem_Click(object sender, EventArgs e)
+        private async void ViewColumnsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var selected = tableSearchResults.SelectedItems.OfType<ListViewItem>().SingleOrDefault();
             if (selected != null)
             {
                 var searchResult = selected.Tag as TableSearchResult;
                 searchBox.Text = SearchParser.GenerateSearch(searchResult.Database, searchResult.Schema, searchResult.Table, null, null);
-                PerformSearch();
+                await PerformSearch();
             }
         }
 
-        private void NewRepo()
+        private async Task NewRepo()
         {
             _repo = new SchemaRepository(GetConnectionString(serverName.Text));
-            //Cache database names
-            try
+            if (!String.IsNullOrWhiteSpace(serverName.Text))
             {
-                _cacheLoader.CacheDatabases(_repo);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error querying database list: " + ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Lock("Fetching database names...");
+                //Cache database names
+                try
+                {
+                    await Task.Run(() => _cacheLoader.CacheDatabases(_repo));
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error querying database list: " + ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                finally
+                {
+                    Unlock();
+                }
             }
         }
 
-        private void ServerName_Leave(object sender, EventArgs e)
+        private async void ServerName_Leave(object sender, EventArgs e)
         {
             if (_repo.ConnectionString != GetConnectionString(serverName.Text))
             {
-                NewRepo();
+                await NewRepo();
             }
         }
 
-        private void SearchButton_Click(object sender, EventArgs e)
+        private async void SearchButton_Click(object sender, EventArgs e)
         {
-            PerformSearch();
+            await PerformSearch();
         }
 
         private void viewProcTextMenuStripOption_Click(object sender, EventArgs e)
@@ -210,6 +234,20 @@ namespace SQLSearcher
                 //TempFileRepo.StartSSMS(serverName.Text, searchResult.Database, fileName);
                 TempFileRepo.StartNPP(fileName);
             }
+        }
+
+        private void Lock(string message)
+        {
+            statusLabel.Text = message;
+            _searchDisabled = true;
+            searchButton.Enabled = false;
+        }
+
+        private void Unlock()
+        {
+            statusLabel.Text = "";
+            _searchDisabled = false;
+            searchButton.Enabled = true;
         }
     }
 }
