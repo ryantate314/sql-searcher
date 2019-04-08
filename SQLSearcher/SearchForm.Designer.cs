@@ -188,7 +188,7 @@
             this.columnResultPage.Controls.Add(this.columnSearchResults);
             this.columnResultPage.Location = new System.Drawing.Point(4, 22);
             this.columnResultPage.Name = "columnResultPage";
-            this.columnResultPage.Size = new System.Drawing.Size(927, 316);
+            this.columnResultPage.Size = new System.Drawing.Size(927, 322);
             this.columnResultPage.TabIndex = 2;
             this.columnResultPage.Text = "Columns";
             this.columnResultPage.UseVisualStyleBackColor = true;
@@ -250,7 +250,7 @@
             this.procedureResultPage.Location = new System.Drawing.Point(4, 22);
             this.procedureResultPage.Name = "procedureResultPage";
             this.procedureResultPage.Padding = new System.Windows.Forms.Padding(3);
-            this.procedureResultPage.Size = new System.Drawing.Size(927, 316);
+            this.procedureResultPage.Size = new System.Drawing.Size(927, 322);
             this.procedureResultPage.TabIndex = 1;
             this.procedureResultPage.Text = "Stored Procedures";
             this.procedureResultPage.UseVisualStyleBackColor = true;
@@ -268,7 +268,7 @@
             this.procedureSearchResults.FullRowSelect = true;
             this.procedureSearchResults.Location = new System.Drawing.Point(3, 3);
             this.procedureSearchResults.Name = "procedureSearchResults";
-            this.procedureSearchResults.Size = new System.Drawing.Size(921, 310);
+            this.procedureSearchResults.Size = new System.Drawing.Size(921, 316);
             this.procedureSearchResults.TabIndex = 1;
             this.procedureSearchResults.UseCompatibleStateImageBehavior = false;
             this.procedureSearchResults.View = System.Windows.Forms.View.Details;
@@ -375,6 +375,7 @@
             this.Controls.Add(this.searchResultsTabControl);
             this.Controls.Add(this.searchBox);
             this.Controls.Add(this.serverName);
+            this.KeyPreview = true;
             this.Name = "SearchForm";
             this.Text = "SearchForm";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchForm_KeyDown);

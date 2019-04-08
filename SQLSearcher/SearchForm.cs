@@ -23,7 +23,6 @@ namespace SQLSearcher
         {
             InitializeComponent();
             _cacheLoader = new CacheLoader();
-            _searchDisabled = true;
 
             NewRepo().Wait();
         }
@@ -43,6 +42,24 @@ namespace SQLSearcher
             {
                 await PerformSearch();
             }
+            else if (e.KeyCode == Keys.J && e.Control)
+            {
+                e.Handled = e.SuppressKeyPress = true; //Prevent beep
+                searchResultsTabControl.SelectedTab = tableResultPage;
+                searchBox.Focus();
+            }
+            else if (e.KeyCode == Keys.K && e.Control)
+            {
+                e.Handled = e.SuppressKeyPress = true; //Prevent beep
+                searchResultsTabControl.SelectedTab = columnResultPage;
+                searchBox.Focus();
+            }
+            else if (e.KeyCode == Keys.L && e.Control)
+            {
+                e.Handled = e.SuppressKeyPress = true; //Prevent beep
+                searchResultsTabControl.SelectedTab = procedureResultPage;
+                searchBox.Focus();
+            }
         }
 
         private async Task PerformSearch()
@@ -54,7 +71,11 @@ namespace SQLSearcher
 
             if (_repo.ConnectionString != GetConnectionString(serverName.Text))
             {
-                await NewRepo();
+                bool serverNameCorrect = await NewRepo();
+                if (!serverNameCorrect)
+                {
+                    return;
+                }
             }
             Search search = SearchParser.Parse(searchBox.Text);
             if (search == null)
@@ -188,8 +209,9 @@ namespace SQLSearcher
             }
         }
 
-        private async Task NewRepo()
+        private async Task<bool> NewRepo()
         {
+            bool success = false;
             _repo = new SchemaRepository(GetConnectionString(serverName.Text));
             if (!String.IsNullOrWhiteSpace(serverName.Text))
             {
@@ -198,21 +220,24 @@ namespace SQLSearcher
                 try
                 {
                     await Task.Run(() => _cacheLoader.CacheDatabases(_repo));
+                    success = true;
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Error querying database list: " + ex.Message, "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    success = false;
                 }
                 finally
                 {
                     Unlock();
                 }
             }
+            return success;
         }
 
         private async void ServerName_Leave(object sender, EventArgs e)
         {
-            if (_repo.ConnectionString != GetConnectionString(serverName.Text))
+            if (_repo.ConnectionString != GetConnectionString(serverName.Text) && !_searchDisabled)
             {
                 await NewRepo();
             }
