@@ -138,7 +138,7 @@ namespace SQLSearcher
                 tableSearchResults.Items.Clear();
                 foreach (var table in results)
                 {
-                    var item = new ListViewItem(new[] { table.Database, table.Schema, table.Table, table.MatchReason });
+                    var item = new ListViewItem(new[] { table.Database, table.Schema, table.Table, table.Type.ToString(), table.MatchReason });
                     item.Tag = table;
                     tableSearchResults.Items.Add(item);
                 }
@@ -254,10 +254,57 @@ namespace SQLSearcher
             if (selected != null)
             {
                 var searchResult = selected.Tag as StoredProcedureResult;
-                string text = _repo.GetProcedureText(searchResult.Database, searchResult.Schema, searchResult.Name);
-                string fileName = TempFileRepo.CreateNewFile(text);
-                //TempFileRepo.StartSSMS(serverName.Text, searchResult.Database, fileName);
-                TempFileRepo.StartNPP(fileName);
+                ShowHelpText(searchResult.Database, searchResult.Schema, searchResult.Name);
+            }
+        }
+
+        /// <summary>
+        /// Show Table create script
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void showCreateScriptToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var selected = tableSearchResults.SelectedItems.OfType<ListViewItem>().SingleOrDefault();
+            if (selected != null)
+            {
+                var searchResult = selected.Tag as TableSearchResult;
+                ShowHelpText(searchResult.Database, searchResult.Schema, searchResult.Table);
+            }
+        }
+
+        private void ShowHelpText(string database, string schema, string obj)
+        {
+            string text = _repo.GetHelpText(database, schema, obj);
+            string fileName = TempFileRepo.CreateNewFile(text);
+            //TempFileRepo.StartSSMS(serverName.Text, searchResult.Database, fileName);
+            TempFileRepo.StartNPP(fileName);
+        }
+
+        /// <summary>
+        /// Custom event handle to display context menu. Needed to disable certain menu items which depend on the type of row.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void tableSearchResults_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Right)
+            {
+                //Get selected item and check which type it is
+                var selected = tableSearchResults.SelectedItems.OfType<ListViewItem>().SingleOrDefault();
+                if (selected != null)
+                {
+                    var searchResult = (TableSearchResult)selected.Tag;
+                    if (searchResult.Type == TableType.Table)
+                    {
+                        showViewCreateScriptMenuItem.Enabled = false;
+                    }
+                    else
+                    {
+                        showViewCreateScriptMenuItem.Enabled = true;
+                    }
+                    tableResultContextMenu.Show(tableSearchResults, e.X, e.Y);
+                }
             }
         }
 

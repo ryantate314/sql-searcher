@@ -46,6 +46,7 @@ namespace SQLSearcher
         {
             public string Schema { get; set; }
             public string Table { get; set; }
+            public TableType Type { get; set; }
         }
 
         private class ProcedureResult
@@ -78,6 +79,7 @@ USE [" + database + "];" + @"
 
 SET NOCOUNT ON;
 
+--Columns
 SELECT      
 			  s.[name] AS [Schema]
 			, t.[name] AS [Table]
@@ -96,16 +98,31 @@ WHERE       c.name LIKE @columnSearch
         AND t.name LIKE @tableSearch
 ORDER BY    [Schema], [Table], [Column];
 
-
+--Tables and Views
 SELECT      
 			  s.[name] AS [Schema]
 			, t.[name] AS [Table]
+			, 1 AS [Type] --Table
 FROM        sys.tables t
 JOIN		sys.schemas s   ON t.schema_id = s.schema_id
 WHERE       t.[name] LIKE @tableSearch
         AND s.name LIKE @schemaSearch
+
+UNION ALL
+
+SELECT      
+			  s.[name] AS [Schema]
+			, v.[name] AS [Table]
+			, 2 AS [Type] --View
+FROM        sys.views v
+JOIN		sys.schemas s   ON v.schema_id = s.schema_id
+WHERE       v.[name] LIKE @tableSearch
+        AND s.name LIKE @schemaSearch
+
 ORDER BY    [Table];
 
+/*
+--Procedures
 SELECT 
 	  s.[name] AS [Schema]
 	, p.[name] AS [Procedure]
@@ -118,6 +135,7 @@ WHERE
         p.[name] LIKE @procedureSearch
     AND s.name LIKE @schemaSearch
 ORDER BY [Schema], [Procedure];
+*/
 ";
             using (var con = new SqlConnection(_connectionString))
             {
@@ -151,7 +169,8 @@ ORDER BY [Schema], [Procedure];
                             Database = database,
                             MatchReason = "Table name contains '" + tableSearch + "'.",
                             Schema = x.Schema,
-                            Table = x.Table
+                            Table = x.Table,
+                            Type = x.Type
                         });
 
                     //Procedures
@@ -290,10 +309,10 @@ WHERE
             }
         }
 
-        public string GetProcedureText(string database, string schema, string procedure)
+        public string GetHelpText(string database, string schema, string obj)
         {
             string query =
-$"USE [{database}]; EXEC sp_helptext N'{database}.{schema}.{procedure}';";
+$"USE [{database}]; EXEC sp_helptext N'{schema}.{obj}';";
             using (var con = new SqlConnection(_connectionString))
             {
                 var lines = con.Query<string>(query);

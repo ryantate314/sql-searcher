@@ -54,6 +54,7 @@
     <Compile Include="Models\ColumnSearchResult.cs" />
     <Compile Include="Models\SearchResultViewModel.cs" />
     <Compile Include="Models\TableSearchResult.cs" />
+    <Compile Include="Models\TableType.cs" />
     <Compile Include="MultiSearch.cs" />
     <Compile Include="ProcedureSearch.cs" />
     <Compile Include="Program.cs" />

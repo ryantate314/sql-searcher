@@ -63,6 +63,8 @@
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.searchButton = new System.Windows.Forms.Button();
+            this.showViewCreateScriptMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.typeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
             databaseColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -151,8 +153,8 @@
             databaseColumn,
             schemaColumn,
             tableCoumn,
+            this.typeColumn,
             reasonColumn});
-            this.tableSearchResults.ContextMenuStrip = this.tableResultContextMenu;
             this.tableSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableSearchResults.FullRowSelect = true;
             this.tableSearchResults.Location = new System.Drawing.Point(3, 3);
@@ -161,26 +163,29 @@
             this.tableSearchResults.TabIndex = 0;
             this.tableSearchResults.UseCompatibleStateImageBehavior = false;
             this.tableSearchResults.View = System.Windows.Forms.View.Details;
+            this.tableSearchResults.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tableSearchResults_MouseClick);
             // 
             // tableResultContextMenu
             // 
             this.tableResultContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewColumnsToolStripMenuItem,
-            this.selectTop1000ToolStripMenuItem});
+            this.selectTop1000ToolStripMenuItem,
+            this.showViewCreateScriptMenuItem});
             this.tableResultContextMenu.Name = "tableResultContextMenu";
-            this.tableResultContextMenu.Size = new System.Drawing.Size(156, 48);
+            this.tableResultContextMenu.Size = new System.Drawing.Size(174, 70);
             // 
             // viewColumnsToolStripMenuItem
             // 
             this.viewColumnsToolStripMenuItem.Name = "viewColumnsToolStripMenuItem";
-            this.viewColumnsToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.viewColumnsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.viewColumnsToolStripMenuItem.Text = "View Columns";
             this.viewColumnsToolStripMenuItem.Click += new System.EventHandler(this.ViewColumnsToolStripMenuItem_Click);
             // 
             // selectTop1000ToolStripMenuItem
             // 
+            this.selectTop1000ToolStripMenuItem.Enabled = false;
             this.selectTop1000ToolStripMenuItem.Name = "selectTop1000ToolStripMenuItem";
-            this.selectTop1000ToolStripMenuItem.Size = new System.Drawing.Size(155, 22);
+            this.selectTop1000ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.selectTop1000ToolStripMenuItem.Text = "Select Top 1000";
             // 
             // columnResultPage
@@ -362,6 +367,18 @@
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 17);
             // 
+            // showViewCreateScriptMenuItem
+            // 
+            this.showViewCreateScriptMenuItem.Name = "showViewCreateScriptMenuItem";
+            this.showViewCreateScriptMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.showViewCreateScriptMenuItem.Text = "Show Create Script";
+            this.showViewCreateScriptMenuItem.Click += new System.EventHandler(this.showCreateScriptToolStripMenuItem_Click);
+            // 
+            // typeColumn
+            // 
+            this.typeColumn.Text = "Type";
+            this.typeColumn.Width = 74;
+            // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -423,6 +440,8 @@
         private System.Windows.Forms.ContextMenuStrip procResultContextMenu;
         private System.Windows.Forms.ToolStripMenuItem viewProcTextMenuStripOption;
         private System.Windows.Forms.ColumnHeader fkColumn;
+        private System.Windows.Forms.ToolStripMenuItem showViewCreateScriptMenuItem;
+        private System.Windows.Forms.ColumnHeader typeColumn;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
     }

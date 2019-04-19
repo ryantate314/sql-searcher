@@ -12,6 +12,7 @@ namespace SQLSearcher.Models
         public string Schema { get; set; }
         public string Database { get; set; }
         public string MatchReason { get; set; }
+        public TableType Type { get; set; }
         public string DisplayName
         {
             get
