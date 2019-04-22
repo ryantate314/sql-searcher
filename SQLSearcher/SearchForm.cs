@@ -276,9 +276,20 @@ namespace SQLSearcher
         private void ShowHelpText(string database, string schema, string obj)
         {
             string text = _repo.GetHelpText(database, schema, obj);
-            string fileName = TempFileRepo.CreateNewFile(text);
-            //TempFileRepo.StartSSMS(serverName.Text, searchResult.Database, fileName);
-            TempFileRepo.StartNPP(fileName);
+            try
+            {
+                string fileName = TempFileRepo.CreateNewFile(text, GenerateFileName(database, schema, obj));
+                TempFileRepo.StartNPP(fileName);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error saving temp file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string GenerateFileName(string database, string schema, string name)
+        {
+            return $"{serverName.Text}.{database}.{schema}.{name}.sql";
         }
 
         /// <summary>

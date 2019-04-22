@@ -7,18 +7,13 @@ using System.Threading.Tasks;
 
 namespace SQLSearcher
 {
-    class TempFileRepo
+    static class TempFileRepo
     {
-        public TempFileRepo()
-        {
 
-        }
-
-        public static string CreateNewFile(string contents)
+        public static string CreateNewFile(string contents, string fileName)
         {
             string path = Path.GetTempPath();
             //SSMS doesn't do syntax hilighting without an SQL extension
-            string fileName = Guid.NewGuid().ToString() + ".sql";
             string fullPath = Path.Combine(path, fileName);
             File.WriteAllText(fullPath, contents);
             return fullPath;
