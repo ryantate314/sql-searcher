@@ -27,6 +27,11 @@ namespace SQLSearcher
             NewRepo().Wait();
         }
 
+        /// <summary>
+        /// Perform the search by pressing Enter or F5 inside of the search text box.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void searchBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.F5)
@@ -193,11 +198,21 @@ namespace SQLSearcher
 
         }
 
+        /// <summary>
+        /// Generate a SQL connection string based on the provider server hostname/instance.
+        /// </summary>
+        /// <param name="server">The server name in the format {hostname}[\instance]</param>
+        /// <returns></returns>
         private static string GetConnectionString(string server)
         {
             return $"Data Source={server};Integrated Security=True;Pooling=False";
         }
 
+        /// <summary>
+        /// Generate and perform a search for the currently selected table's column list.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ViewColumnsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var selected = tableSearchResults.SelectedItems.OfType<ListViewItem>().SingleOrDefault();
@@ -209,6 +224,10 @@ namespace SQLSearcher
             }
         }
 
+        /// <summary>
+        /// Connect to a new database.
+        /// </summary>
+        /// <returns></returns>
         private async Task<bool> NewRepo()
         {
             bool success = false;
@@ -235,6 +254,11 @@ namespace SQLSearcher
             return success;
         }
 
+        /// <summary>
+        /// Server name text box on-blur event. Update the database connection on change.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private async void ServerName_Leave(object sender, EventArgs e)
         {
             if (_repo.ConnectionString != GetConnectionString(serverName.Text) && !_searchDisabled)
@@ -248,6 +272,11 @@ namespace SQLSearcher
             await PerformSearch();
         }
 
+        /// <summary>
+        /// View procedure definition.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void viewProcTextMenuStripOption_Click(object sender, EventArgs e)
         {
             var selected = procedureSearchResults.SelectedItems.OfType<ListViewItem>().SingleOrDefault();
@@ -259,7 +288,7 @@ namespace SQLSearcher
         }
 
         /// <summary>
-        /// Show Table create script
+        /// Show view create script.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -273,6 +302,12 @@ namespace SQLSearcher
             }
         }
 
+        /// <summary>
+        /// Generate the definition of the provided object and open it in a text editor.
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="schema"></param>
+        /// <param name="obj"></param>
         private void ShowHelpText(string database, string schema, string obj)
         {
             string text = _repo.GetHelpText(database, schema, obj);
@@ -287,6 +322,13 @@ namespace SQLSearcher
             }
         }
 
+        /// <summary>
+        /// Generate a temporary file name for the provided info.
+        /// </summary>
+        /// <param name="database"></param>
+        /// <param name="schema"></param>
+        /// <param name="name"></param>
+        /// <returns></returns>
         private string GenerateFileName(string database, string schema, string name)
         {
             return $"{serverName.Text}.{database}.{schema}.{name}.sql";
