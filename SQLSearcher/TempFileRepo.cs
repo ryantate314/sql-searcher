@@ -27,7 +27,7 @@ namespace SQLSearcher
 
         public static void StartNPP(string path)
         {
-            string command = $"/C start notepad++ {path}";
+            string command = $"/C start notepad++ \"{path}\"";
             System.Diagnostics.Process.Start("CMD.exe", command);
         }
     }
