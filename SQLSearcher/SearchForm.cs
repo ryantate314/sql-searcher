@@ -331,7 +331,8 @@ namespace SQLSearcher
         /// <returns></returns>
         private string GenerateFileName(string database, string schema, string name)
         {
-            return $"{serverName.Text}.{database}.{schema}.{name}.sql";
+            string sanitizedServerName = serverName.Text.Replace("\\", "-");
+            return $"{sanitizedServerName}.{database}.{schema}.{name}.sql";
         }
 
         /// <summary>
