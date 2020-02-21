@@ -70,6 +70,7 @@
             this.backButton = new System.Windows.Forms.Button();
             this.backToolTip = new System.Windows.Forms.ToolTip(this.components);
             this.forwardButton = new System.Windows.Forms.Button();
+            this.frequentServerPanel = new System.Windows.Forms.Panel();
             databaseColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             schemaColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             tableCoumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -119,7 +120,7 @@
             // 
             // searchBox
             // 
-            this.searchBox.Location = new System.Drawing.Point(12, 76);
+            this.searchBox.Location = new System.Drawing.Point(12, 112);
             this.searchBox.Name = "searchBox";
             this.searchBox.Size = new System.Drawing.Size(363, 20);
             this.searchBox.TabIndex = 1;
@@ -336,7 +337,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 99);
+            this.label1.Location = new System.Drawing.Point(12, 135);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(198, 52);
             this.label1.TabIndex = 3;
@@ -346,7 +347,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 60);
+            this.label2.Location = new System.Drawing.Point(9, 96);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(68, 13);
             this.label2.TabIndex = 4;
@@ -363,7 +364,7 @@
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(381, 75);
+            this.searchButton.Location = new System.Drawing.Point(381, 111);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(75, 23);
             this.searchButton.TabIndex = 6;
@@ -388,7 +389,7 @@
             // backButton
             // 
             this.backButton.Enabled = false;
-            this.backButton.Location = new System.Drawing.Point(462, 76);
+            this.backButton.Location = new System.Drawing.Point(462, 112);
             this.backButton.Name = "backButton";
             this.backButton.Size = new System.Drawing.Size(18, 23);
             this.backButton.TabIndex = 8;
@@ -400,7 +401,7 @@
             // forwardButton
             // 
             this.forwardButton.Enabled = false;
-            this.forwardButton.Location = new System.Drawing.Point(482, 76);
+            this.forwardButton.Location = new System.Drawing.Point(482, 112);
             this.forwardButton.Name = "forwardButton";
             this.forwardButton.Size = new System.Drawing.Size(18, 23);
             this.forwardButton.TabIndex = 9;
@@ -409,11 +410,21 @@
             this.forwardButton.UseVisualStyleBackColor = true;
             this.forwardButton.Click += new System.EventHandler(this.forwardButton_Click);
             // 
+            // frequentServerPanel
+            // 
+            this.frequentServerPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.frequentServerPanel.Location = new System.Drawing.Point(12, 60);
+            this.frequentServerPanel.Name = "frequentServerPanel";
+            this.frequentServerPanel.Size = new System.Drawing.Size(916, 30);
+            this.frequentServerPanel.TabIndex = 10;
+            // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 590);
+            this.Controls.Add(this.frequentServerPanel);
             this.Controls.Add(this.forwardButton);
             this.Controls.Add(this.backButton);
             this.Controls.Add(this.statusStrip);
@@ -479,5 +490,6 @@
         private System.Windows.Forms.Button backButton;
         private System.Windows.Forms.ToolTip backToolTip;
         private System.Windows.Forms.Button forwardButton;
+        private System.Windows.Forms.Panel frequentServerPanel;
     }
 }

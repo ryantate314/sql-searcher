@@ -115,6 +115,7 @@ namespace SQLSearcher
             {
                 SearchResultViewModel result = await Task.Run(() => search.Execute(_repo));
                 RenderResults(result);
+                RenderFrequentServers();
             }
             catch (Exception ex)
             {
@@ -457,6 +458,30 @@ namespace SQLSearcher
         private void forwardButton_Click(object sender, EventArgs e)
         {
             NextSearch();
+        }
+
+        private void RenderFrequentServers()
+        {
+            var counts = _searchHistory.Select(x => x.Server)
+                .GroupBy(x => x)
+                .ToDictionary(x => x.Key, x => x.Count());
+
+            var top = counts.OrderBy(x => x.Value)
+                .Select(x => x.Key)
+                .Take(4);
+
+            frequentServerPanel.Controls.Clear();
+            foreach (string server in top)
+            {
+                var button = new Button();
+                button.Text = server;
+                button.Tag = server;
+                button.Click += (sender, e) =>
+                {
+                    serverName.Text = (string)button.Tag;
+                };
+                frequentServerPanel.Controls.Add(button);
+            }
         }
     }
 }
