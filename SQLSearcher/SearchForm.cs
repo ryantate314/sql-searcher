@@ -19,10 +19,20 @@ namespace SQLSearcher
 
         private bool _searchDisabled;
 
+        private class SearchInputs
+        {
+            public string Server { get; set; }
+            public string Search { get; set; }
+        }
+        private List<SearchInputs> _searchHistory;
+        private int _searchHistoryIndex;
+
         public SearchForm()
         {
             InitializeComponent();
             _cacheLoader = new CacheLoader();
+            _searchHistory = new List<SearchInputs>();
+            _searchHistoryIndex = -1;
 
             NewRepo().Wait();
         }
@@ -65,6 +75,14 @@ namespace SQLSearcher
                 searchResultsTabControl.SelectedTab = procedureResultPage;
                 searchBox.Focus();
             }
+            else if (e.KeyCode == Keys.Left && e.Alt)
+            {
+                PreviousSearch();
+            }
+            else if (e.KeyCode == Keys.Right && e.Alt)
+            {
+                NextSearch();
+            }
         }
 
         private async Task PerformSearch()
@@ -90,6 +108,9 @@ namespace SQLSearcher
             }
 
             Lock("Searching...");
+
+            AddSearchToHistory(serverName.Text, searchBox.Text);
+
             try
             {
                 SearchResultViewModel result = await Task.Run(() => search.Execute(_repo));
@@ -374,6 +395,68 @@ namespace SQLSearcher
             statusLabel.Text = "";
             _searchDisabled = false;
             searchButton.Enabled = true;
+        }
+
+        private void PreviousSearch()
+        {
+            if (_searchHistoryIndex > 0)
+            {
+                _searchHistoryIndex--;
+                searchBox.Text = _searchHistory[_searchHistoryIndex].Search;
+                serverName.Text = _searchHistory[_searchHistoryIndex].Server;
+                forwardButton.Enabled = true;
+            }
+            
+            if (_searchHistoryIndex == 0)
+            {
+                backButton.Enabled = false;
+            }
+
+            searchBox.Focus();
+        }
+
+        private void NextSearch()
+        {
+            if (_searchHistoryIndex < _searchHistory.Count - 1)
+            {
+                _searchHistoryIndex++;
+                searchBox.Text = _searchHistory[_searchHistoryIndex].Search;
+                serverName.Text = _searchHistory[_searchHistoryIndex].Server;
+                forwardButton.Enabled = true;
+                backButton.Enabled = true;
+            }
+            else if (_searchHistoryIndex == _searchHistory.Count - 1)
+            {
+                //Top of the stack. Clear the text box
+                _searchHistoryIndex++;
+                searchBox.Text = "";
+                forwardButton.Enabled = false;
+                backButton.Enabled = true;
+            }
+            searchBox.Focus();
+        }
+
+        private void AddSearchToHistory(string server, string searchTerm)
+        {
+            //Add search to top of history stack
+            _searchHistory.Add(new SearchInputs()
+            {
+                Server = server,
+                Search = searchTerm
+            });
+            _searchHistoryIndex = _searchHistory.Count - 1;
+            forwardButton.Enabled = false;
+            backButton.Enabled = true;
+        }
+
+        private void backButton_Click(object sender, EventArgs e)
+        {
+            PreviousSearch();
+        }
+
+        private void forwardButton_Click(object sender, EventArgs e)
+        {
+            NextSearch();
         }
     }
 }
