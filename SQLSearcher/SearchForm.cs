@@ -33,6 +33,7 @@ namespace SQLSearcher
 
             NewRepo().Wait();
 
+            //Load initial history from disk.
             _history.GetSearchHistory()
                 .ContinueWith(async x =>
                 {
@@ -452,7 +453,7 @@ namespace SQLSearcher
         private async Task AddSearchToHistory(string server, string searchTerm)
         {
 
-            //Add search to top of history stack. Don't lock the screen.
+            //Add search to top of history stack. Don't lock the screen if it has to flush the data to disk.
             _ = _history.AddSearch(new SearchInputs()
             {
                 Server = server,

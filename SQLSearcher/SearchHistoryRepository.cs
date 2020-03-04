@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SQLSearcher
@@ -17,12 +18,15 @@ namespace SQLSearcher
 
         private int _currentBuffer;
 
-        private Task _addSearchTask;
         private Task<List<SearchInputs>> _loadHistoryTask;
+        private BetterSemaphore _saveHistorySemoaphore; //Locks saving history to a file
+        private BetterSemaphore _modifyHistorySemaphore; //Locks access for adding records to the stack
 
         public SearchHistoryRepository()
         {
             _currentBuffer = 0;
+            _saveHistorySemoaphore = new BetterSemaphore(1, 1);
+            _modifyHistorySemaphore = new BetterSemaphore(1, 1);
         }
 
         public async Task<List<SearchInputs>> GetSearchHistory()
@@ -31,13 +35,14 @@ namespace SQLSearcher
             {
                 try
                 {
+                    //Check if a file read is already in progress
                     if (_loadHistoryTask != null)
                     {
                         await _loadHistoryTask;
                         _loadHistoryTask = null;
                     }
 
-                    //Check if null because the previous task completing should have set the list
+                    //Check if still null, because the previous task completing should have set the value
                     if (_searchHistory == null)
                     {
                         _loadHistoryTask = ReadSearchFile();
@@ -53,29 +58,66 @@ namespace SQLSearcher
             return _searchHistory;
         }
 
-        public async Task AddSearch(SearchInputs search)
+        /// <summary>
+        /// Add the provided search to the top of the history stack. This is a partially-async
+        /// method. The response can be discarded unless the calling code needs to ensure all
+        /// file writes are complete.
+        /// </summary>
+        /// <param name="search"></param>
+        /// <returns></returns>
+        public Task AddSearch(SearchInputs search)
         {
-            _searchHistory.Add(search);
-            _currentBuffer++;
+            using (_modifyHistorySemaphore.Lock())
+            {
+                _searchHistory.Add(search);
+                _currentBuffer++;
+            }
 
+            //Flush the buffer to the history file
             if (_currentBuffer > BUFFER_SIZE)
             {
-                //Wait for the existing write to complete.
-                if (_addSearchTask != null)
-                {
-                    await _addSearchTask;
-                    _addSearchTask = null;
-                }
-                _addSearchTask = WriteSearchHistory();
-                _currentBuffer = 0;
-                await _addSearchTask;
+                return WriteSearchHistory(() => _currentBuffer > BUFFER_SIZE);
             }
+            return Task.CompletedTask;
         }
 
-        private async Task WriteSearchHistory()
+        /// <summary>
+        /// Write the current search history to disk.
+        /// </summary>
+        /// <param name="proceed">Determine if the action still needs to be performed after mutex is achieved.</param>
+        /// <returns></returns>
+        private async Task WriteSearchHistory(Func<bool> proceed = null)
         {
-            var json = JsonConvert.SerializeObject(_searchHistory);
-            await Task.Run(() => File.WriteAllText(FILENAME, json));
+            //Wait for any existing writes to complete.
+            using (await _saveHistorySemoaphore.LockAsync())
+            {
+                bool goAhead = false;
+                string json = "";
+                int currentBuffer = 0;
+
+                //Place a lock on adding any more searches until we mark down the buffer size and serialize the data
+                using (await _modifyHistorySemaphore.LockAsync())
+                {
+                    currentBuffer = _currentBuffer;
+                    
+                    //Determine if conditions are still good to go while we have a lock on the search history
+                    goAhead = proceed == null || proceed.Invoke();
+
+                    if (goAhead)
+                    {
+                        json = JsonConvert.SerializeObject(_searchHistory);
+                    }
+                }
+
+                //If conditions are still good
+                if (goAhead)
+                {
+                    await Task.Run(() => File.WriteAllText(FILENAME, json));
+
+                    //Decrement buffer count. Not setting to 0 in case more searches were added while we were saving.
+                    _currentBuffer -= currentBuffer;
+                }
+            }//End save history lock
         }
 
         private async Task<List<SearchInputs>> ReadSearchFile()

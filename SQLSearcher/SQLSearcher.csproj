@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BetterSemaphore.cs" />
     <Compile Include="CacheLoader.cs" />
     <Compile Include="ColumnSearch.cs" />
     <Compile Include="FullSearch.cs" />
