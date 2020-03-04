@@ -16,25 +16,33 @@ namespace SQLSearcher
     {
         private SchemaRepository _repo;
         private CacheLoader _cacheLoader;
+        private readonly SearchHistoryRepository _history;
 
         private bool _searchDisabled;
 
-        private class SearchInputs
-        {
-            public string Server { get; set; }
-            public string Search { get; set; }
-        }
-        private List<SearchInputs> _searchHistory;
+        private Task _renderServersTask;
         private int _searchHistoryIndex;
 
         public SearchForm()
         {
             InitializeComponent();
             _cacheLoader = new CacheLoader();
-            _searchHistory = new List<SearchInputs>();
             _searchHistoryIndex = -1;
+            _history = new SearchHistoryRepository();
+            _renderServersTask = RenderFrequentServers();
 
             NewRepo().Wait();
+
+            _history.GetSearchHistory()
+                .ContinueWith(async x =>
+                {
+                    List<SearchInputs> history = await x;
+                    if (history.Count > 0)
+                    {
+                        backButton.Enabled = true;
+                        _searchHistoryIndex = history.Count;
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         /// <summary>
@@ -109,13 +117,13 @@ namespace SQLSearcher
 
             Lock("Searching...");
 
-            AddSearchToHistory(serverName.Text, searchBox.Text);
+            await AddSearchToHistory(serverName.Text, searchBox.Text);
 
             try
             {
                 SearchResultViewModel result = await Task.Run(() => search.Execute(_repo));
                 RenderResults(result);
-                RenderFrequentServers();
+                await RenderFrequentServers();
             }
             catch (Exception ex)
             {
@@ -400,11 +408,13 @@ namespace SQLSearcher
 
         private void PreviousSearch()
         {
+            List<SearchInputs> searchHistory = _history.GetSearchHistory().Result;
+
             if (_searchHistoryIndex > 0)
             {
                 _searchHistoryIndex--;
-                searchBox.Text = _searchHistory[_searchHistoryIndex].Search;
-                serverName.Text = _searchHistory[_searchHistoryIndex].Server;
+                searchBox.Text = searchHistory[_searchHistoryIndex].Search;
+                serverName.Text = searchHistory[_searchHistoryIndex].Server;
                 forwardButton.Enabled = true;
             }
             
@@ -418,15 +428,17 @@ namespace SQLSearcher
 
         private void NextSearch()
         {
-            if (_searchHistoryIndex < _searchHistory.Count - 1)
+            List<SearchInputs> searchHistory = _history.GetSearchHistory().Result;
+
+            if (_searchHistoryIndex < searchHistory.Count - 1)
             {
                 _searchHistoryIndex++;
-                searchBox.Text = _searchHistory[_searchHistoryIndex].Search;
-                serverName.Text = _searchHistory[_searchHistoryIndex].Server;
+                searchBox.Text = searchHistory[_searchHistoryIndex].Search;
+                serverName.Text = searchHistory[_searchHistoryIndex].Server;
                 forwardButton.Enabled = true;
                 backButton.Enabled = true;
             }
-            else if (_searchHistoryIndex == _searchHistory.Count - 1)
+            else if (_searchHistoryIndex == searchHistory.Count - 1)
             {
                 //Top of the stack. Clear the text box
                 _searchHistoryIndex++;
@@ -437,15 +449,19 @@ namespace SQLSearcher
             searchBox.Focus();
         }
 
-        private void AddSearchToHistory(string server, string searchTerm)
+        private async Task AddSearchToHistory(string server, string searchTerm)
         {
-            //Add search to top of history stack
-            _searchHistory.Add(new SearchInputs()
+
+            //Add search to top of history stack. Don't lock the screen.
+            _ = _history.AddSearch(new SearchInputs()
             {
                 Server = server,
                 Search = searchTerm
             });
-            _searchHistoryIndex = _searchHistory.Count - 1;
+
+            List<SearchInputs> searchHistory = await _history.GetSearchHistory();
+
+            _searchHistoryIndex = searchHistory.Count - 1;
             forwardButton.Enabled = false;
             backButton.Enabled = true;
         }
@@ -460,28 +476,49 @@ namespace SQLSearcher
             NextSearch();
         }
 
-        private void RenderFrequentServers()
+        private async Task RenderFrequentServers()
         {
-            var counts = _searchHistory.Select(x => x.Server)
+            if (_renderServersTask != null)
+            {
+                await _renderServersTask;
+                _renderServersTask = null;
+            }
+
+            List<SearchInputs> searchHistory = await _history.GetSearchHistory();
+
+            //Count the number of times each server has been searched
+            var counts = searchHistory.Select(x => x.Server)
                 .GroupBy(x => x)
                 .ToDictionary(x => x.Key, x => x.Count());
 
+            //Get the top 4 servers
             var top = counts.OrderBy(x => x.Value)
                 .Select(x => x.Key)
                 .Take(4);
 
             frequentServerPanel.Controls.Clear();
+            const int margin = 5;
+            int buttonWidth = 0 - margin;
             foreach (string server in top)
             {
-                var button = new Button();
-                button.Text = server;
-                button.Tag = server;
-                button.Click += (sender, e) =>
+                var link = new Button();
+                link.Text = server;
+                link.Cursor = Cursors.Arrow;
+                link.AutoSize = true;
+                link.Click += (sender, e) =>
                 {
-                    serverName.Text = (string)button.Tag;
+                    string serverCopy = server; //Create a copy of the server within the closure
+                    serverName.Text = serverCopy;
                 };
-                frequentServerPanel.Controls.Add(button);
+                frequentServerPanel.Controls.Add(link);
+                link.Location = new Point(buttonWidth + margin, link.Location.Y);
+                buttonWidth += link.Width + margin;
             }
+        }
+
+        private async void SearchForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            await _history.Flush();
         }
     }
 }

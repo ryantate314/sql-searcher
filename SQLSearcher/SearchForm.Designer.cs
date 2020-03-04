@@ -438,6 +438,7 @@
             this.KeyPreview = true;
             this.Name = "SearchForm";
             this.Text = "SearchForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SearchForm_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchForm_KeyDown);
             this.searchResultsTabControl.ResumeLayout(false);
             this.tableResultPage.ResumeLayout(false);
