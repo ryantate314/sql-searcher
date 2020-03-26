@@ -64,9 +64,22 @@ namespace SQLSearcher
 
         public static string GenerateSearch(string database, string schema, string table, string column, string procedure)
         {
-            //TODO flesh out
-            //Specify column search
-            return $"{database}.{schema}.{table}.*";
+            string search = "";
+
+            if (!String.IsNullOrEmpty(column))
+            {
+                search = $"{database}.{schema}.{table}.{column}";
+            }
+            else if (!String.IsNullOrEmpty(procedure))
+            {
+                search = $"{database}.{schema}.{procedure}";
+            }
+            else
+            {
+                search = $"{database}.{schema}.{table}.*";
+            }
+
+            return search;
         }
     }
 }

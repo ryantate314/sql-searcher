@@ -16,15 +16,34 @@ namespace SQLSearcher
     {
         private SchemaRepository _repo;
         private CacheLoader _cacheLoader;
+        private readonly SearchHistoryRepository _history;
 
         private bool _searchDisabled;
+
+        private Task _renderServersTask;
+        private int _searchHistoryIndex;
 
         public SearchForm()
         {
             InitializeComponent();
             _cacheLoader = new CacheLoader();
+            _searchHistoryIndex = -1;
+            _history = new SearchHistoryRepository();
+            _renderServersTask = RenderFrequentServers();
 
             NewRepo().Wait();
+
+            //Load initial history from disk.
+            _history.GetSearchHistory()
+                .ContinueWith(async x =>
+                {
+                    List<SearchInputs> history = await x;
+                    if (history.Count > 0)
+                    {
+                        backButton.Enabled = true;
+                        _searchHistoryIndex = history.Count;
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         /// <summary>
@@ -65,6 +84,14 @@ namespace SQLSearcher
                 searchResultsTabControl.SelectedTab = procedureResultPage;
                 searchBox.Focus();
             }
+            else if (e.KeyCode == Keys.Left && e.Alt)
+            {
+                PreviousSearch();
+            }
+            else if (e.KeyCode == Keys.Right && e.Alt)
+            {
+                NextSearch();
+            }
         }
 
         private async Task PerformSearch()
@@ -90,10 +117,14 @@ namespace SQLSearcher
             }
 
             Lock("Searching...");
+
+            await AddSearchToHistory(serverName.Text, searchBox.Text);
+
             try
             {
                 SearchResultViewModel result = await Task.Run(() => search.Execute(_repo));
                 RenderResults(result);
+                await RenderFrequentServers();
             }
             catch (Exception ex)
             {
@@ -374,6 +405,121 @@ namespace SQLSearcher
             statusLabel.Text = "";
             _searchDisabled = false;
             searchButton.Enabled = true;
+        }
+
+        private void PreviousSearch()
+        {
+            List<SearchInputs> searchHistory = _history.GetSearchHistory().Result;
+
+            if (_searchHistoryIndex > 0)
+            {
+                _searchHistoryIndex--;
+                searchBox.Text = searchHistory[_searchHistoryIndex].Search;
+                serverName.Text = searchHistory[_searchHistoryIndex].Server;
+                forwardButton.Enabled = true;
+            }
+            
+            if (_searchHistoryIndex == 0)
+            {
+                backButton.Enabled = false;
+            }
+
+            searchBox.Focus();
+        }
+
+        private void NextSearch()
+        {
+            List<SearchInputs> searchHistory = _history.GetSearchHistory().Result;
+
+            if (_searchHistoryIndex < searchHistory.Count - 1)
+            {
+                _searchHistoryIndex++;
+                searchBox.Text = searchHistory[_searchHistoryIndex].Search;
+                serverName.Text = searchHistory[_searchHistoryIndex].Server;
+                forwardButton.Enabled = true;
+                backButton.Enabled = true;
+            }
+            else if (_searchHistoryIndex == searchHistory.Count - 1)
+            {
+                //Top of the stack. Clear the text box
+                _searchHistoryIndex++;
+                searchBox.Text = "";
+                forwardButton.Enabled = false;
+                backButton.Enabled = true;
+            }
+            searchBox.Focus();
+        }
+
+        private async Task AddSearchToHistory(string server, string searchTerm)
+        {
+
+            //Add search to top of history stack. Don't lock the screen if it has to flush the data to disk.
+            _ = _history.AddSearch(new SearchInputs()
+            {
+                Server = server,
+                Search = searchTerm
+            });
+
+            List<SearchInputs> searchHistory = await _history.GetSearchHistory();
+
+            _searchHistoryIndex = searchHistory.Count - 1;
+            forwardButton.Enabled = false;
+            backButton.Enabled = true;
+        }
+
+        private void backButton_Click(object sender, EventArgs e)
+        {
+            PreviousSearch();
+        }
+
+        private void forwardButton_Click(object sender, EventArgs e)
+        {
+            NextSearch();
+        }
+
+        private async Task RenderFrequentServers()
+        {
+            if (_renderServersTask != null)
+            {
+                await _renderServersTask;
+                _renderServersTask = null;
+            }
+
+            List<SearchInputs> searchHistory = await _history.GetSearchHistory();
+
+            //Count the number of times each server has been searched
+            var counts = searchHistory.Select(x => x.Server)
+                .GroupBy(x => x)
+                .ToDictionary(x => x.Key, x => x.Count());
+
+            //Get the top 4 servers
+            var top = counts.OrderByDescending(x => x.Value)
+                .Select(x => x.Key)
+                .Take(4);
+
+            frequentServerPanel.Controls.Clear();
+            const int margin = 5;
+            int buttonWidth = 0 - margin;
+            foreach (string server in top)
+            {
+                var link = new Button();
+                link.Text = server;
+                link.Cursor = Cursors.Arrow;
+                link.AutoSize = true;
+                link.Click += (sender, e) =>
+                {
+                    string serverCopy = server; //Create a copy of the server within the closure
+                    serverName.Text = serverCopy;
+                };
+                frequentServerPanel.Controls.Add(link);
+                link.Location = new Point(buttonWidth + margin, link.Location.Y);
+                buttonWidth += link.Width + margin;
+            }
+        }
+
+        private async void SearchForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            await _history.Flush();
         }
     }
 }

@@ -39,9 +39,7 @@
             this.searchResultsTabControl = new System.Windows.Forms.TabControl();
             this.tableResultPage = new System.Windows.Forms.TabPage();
             this.tableSearchResults = new System.Windows.Forms.ListView();
-            this.tableResultContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.viewColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectTop1000ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.typeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnResultPage = new System.Windows.Forms.TabPage();
             this.columnSearchResults = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -59,14 +57,20 @@
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.procResultContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.viewProcTextMenuStripOption = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableResultContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.viewColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectTop1000ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showViewCreateScriptMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.searchButton = new System.Windows.Forms.Button();
-            this.showViewCreateScriptMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.typeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.backButton = new System.Windows.Forms.Button();
+            this.backToolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.forwardButton = new System.Windows.Forms.Button();
+            this.frequentServerPanel = new System.Windows.Forms.Panel();
             databaseColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             schemaColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             tableCoumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -74,10 +78,10 @@
             columnDatabaseColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.searchResultsTabControl.SuspendLayout();
             this.tableResultPage.SuspendLayout();
-            this.tableResultContextMenu.SuspendLayout();
             this.columnResultPage.SuspendLayout();
             this.procedureResultPage.SuspendLayout();
             this.procResultContextMenu.SuspendLayout();
+            this.tableResultContextMenu.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -116,7 +120,7 @@
             // 
             // searchBox
             // 
-            this.searchBox.Location = new System.Drawing.Point(12, 76);
+            this.searchBox.Location = new System.Drawing.Point(12, 112);
             this.searchBox.Name = "searchBox";
             this.searchBox.Size = new System.Drawing.Size(363, 20);
             this.searchBox.TabIndex = 1;
@@ -157,6 +161,7 @@
             reasonColumn});
             this.tableSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableSearchResults.FullRowSelect = true;
+            this.tableSearchResults.HideSelection = false;
             this.tableSearchResults.Location = new System.Drawing.Point(3, 3);
             this.tableSearchResults.Name = "tableSearchResults";
             this.tableSearchResults.Size = new System.Drawing.Size(921, 316);
@@ -165,28 +170,10 @@
             this.tableSearchResults.View = System.Windows.Forms.View.Details;
             this.tableSearchResults.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tableSearchResults_MouseClick);
             // 
-            // tableResultContextMenu
+            // typeColumn
             // 
-            this.tableResultContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewColumnsToolStripMenuItem,
-            this.selectTop1000ToolStripMenuItem,
-            this.showViewCreateScriptMenuItem});
-            this.tableResultContextMenu.Name = "tableResultContextMenu";
-            this.tableResultContextMenu.Size = new System.Drawing.Size(174, 70);
-            // 
-            // viewColumnsToolStripMenuItem
-            // 
-            this.viewColumnsToolStripMenuItem.Name = "viewColumnsToolStripMenuItem";
-            this.viewColumnsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.viewColumnsToolStripMenuItem.Text = "View Columns";
-            this.viewColumnsToolStripMenuItem.Click += new System.EventHandler(this.ViewColumnsToolStripMenuItem_Click);
-            // 
-            // selectTop1000ToolStripMenuItem
-            // 
-            this.selectTop1000ToolStripMenuItem.Enabled = false;
-            this.selectTop1000ToolStripMenuItem.Name = "selectTop1000ToolStripMenuItem";
-            this.selectTop1000ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.selectTop1000ToolStripMenuItem.Text = "Select Top 1000";
+            this.typeColumn.Text = "Type";
+            this.typeColumn.Width = 74;
             // 
             // columnResultPage
             // 
@@ -212,6 +199,7 @@
             this.fkColumn,
             this.columnHeader4});
             this.columnSearchResults.FullRowSelect = true;
+            this.columnSearchResults.HideSelection = false;
             this.columnSearchResults.Location = new System.Drawing.Point(3, 3);
             this.columnSearchResults.Name = "columnSearchResults";
             this.columnSearchResults.Size = new System.Drawing.Size(927, 316);
@@ -271,6 +259,7 @@
             this.procedureSearchResults.ContextMenuStrip = this.procResultContextMenu;
             this.procedureSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.procedureSearchResults.FullRowSelect = true;
+            this.procedureSearchResults.HideSelection = false;
             this.procedureSearchResults.Location = new System.Drawing.Point(3, 3);
             this.procedureSearchResults.Name = "procedureSearchResults";
             this.procedureSearchResults.Size = new System.Drawing.Size(921, 316);
@@ -315,10 +304,40 @@
             this.viewProcTextMenuStripOption.Text = "View Text";
             this.viewProcTextMenuStripOption.Click += new System.EventHandler(this.viewProcTextMenuStripOption_Click);
             // 
+            // tableResultContextMenu
+            // 
+            this.tableResultContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewColumnsToolStripMenuItem,
+            this.selectTop1000ToolStripMenuItem,
+            this.showViewCreateScriptMenuItem});
+            this.tableResultContextMenu.Name = "tableResultContextMenu";
+            this.tableResultContextMenu.Size = new System.Drawing.Size(174, 70);
+            // 
+            // viewColumnsToolStripMenuItem
+            // 
+            this.viewColumnsToolStripMenuItem.Name = "viewColumnsToolStripMenuItem";
+            this.viewColumnsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.viewColumnsToolStripMenuItem.Text = "View Columns";
+            this.viewColumnsToolStripMenuItem.Click += new System.EventHandler(this.ViewColumnsToolStripMenuItem_Click);
+            // 
+            // selectTop1000ToolStripMenuItem
+            // 
+            this.selectTop1000ToolStripMenuItem.Enabled = false;
+            this.selectTop1000ToolStripMenuItem.Name = "selectTop1000ToolStripMenuItem";
+            this.selectTop1000ToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.selectTop1000ToolStripMenuItem.Text = "Select Top 1000";
+            // 
+            // showViewCreateScriptMenuItem
+            // 
+            this.showViewCreateScriptMenuItem.Name = "showViewCreateScriptMenuItem";
+            this.showViewCreateScriptMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.showViewCreateScriptMenuItem.Text = "Show Create Script";
+            this.showViewCreateScriptMenuItem.Click += new System.EventHandler(this.showCreateScriptToolStripMenuItem_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 99);
+            this.label1.Location = new System.Drawing.Point(12, 135);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(198, 52);
             this.label1.TabIndex = 3;
@@ -328,7 +347,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 60);
+            this.label2.Location = new System.Drawing.Point(9, 96);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(68, 13);
             this.label2.TabIndex = 4;
@@ -345,7 +364,7 @@
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(381, 76);
+            this.searchButton.Location = new System.Drawing.Point(381, 111);
             this.searchButton.Name = "searchButton";
             this.searchButton.Size = new System.Drawing.Size(75, 23);
             this.searchButton.TabIndex = 6;
@@ -367,23 +386,47 @@
             this.statusLabel.Name = "statusLabel";
             this.statusLabel.Size = new System.Drawing.Size(0, 17);
             // 
-            // showViewCreateScriptMenuItem
+            // backButton
             // 
-            this.showViewCreateScriptMenuItem.Name = "showViewCreateScriptMenuItem";
-            this.showViewCreateScriptMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.showViewCreateScriptMenuItem.Text = "Show Create Script";
-            this.showViewCreateScriptMenuItem.Click += new System.EventHandler(this.showCreateScriptToolStripMenuItem_Click);
+            this.backButton.Enabled = false;
+            this.backButton.Location = new System.Drawing.Point(462, 112);
+            this.backButton.Name = "backButton";
+            this.backButton.Size = new System.Drawing.Size(18, 23);
+            this.backButton.TabIndex = 8;
+            this.backButton.Text = "<";
+            this.backToolTip.SetToolTip(this.backButton, "Back (Alt + Left Arrow)");
+            this.backButton.UseVisualStyleBackColor = true;
+            this.backButton.Click += new System.EventHandler(this.backButton_Click);
             // 
-            // typeColumn
+            // forwardButton
             // 
-            this.typeColumn.Text = "Type";
-            this.typeColumn.Width = 74;
+            this.forwardButton.Enabled = false;
+            this.forwardButton.Location = new System.Drawing.Point(482, 112);
+            this.forwardButton.Name = "forwardButton";
+            this.forwardButton.Size = new System.Drawing.Size(18, 23);
+            this.forwardButton.TabIndex = 9;
+            this.forwardButton.Text = ">";
+            this.backToolTip.SetToolTip(this.forwardButton, "Forward (Alt + Right Arrow)");
+            this.forwardButton.UseVisualStyleBackColor = true;
+            this.forwardButton.Click += new System.EventHandler(this.forwardButton_Click);
+            // 
+            // frequentServerPanel
+            // 
+            this.frequentServerPanel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.frequentServerPanel.Location = new System.Drawing.Point(12, 60);
+            this.frequentServerPanel.Name = "frequentServerPanel";
+            this.frequentServerPanel.Size = new System.Drawing.Size(916, 30);
+            this.frequentServerPanel.TabIndex = 10;
             // 
             // SearchForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(935, 590);
+            this.Controls.Add(this.frequentServerPanel);
+            this.Controls.Add(this.forwardButton);
+            this.Controls.Add(this.backButton);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.searchButton);
             this.Controls.Add(this.label3);
@@ -395,13 +438,14 @@
             this.KeyPreview = true;
             this.Name = "SearchForm";
             this.Text = "SearchForm";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SearchForm_FormClosing);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchForm_KeyDown);
             this.searchResultsTabControl.ResumeLayout(false);
             this.tableResultPage.ResumeLayout(false);
-            this.tableResultContextMenu.ResumeLayout(false);
             this.columnResultPage.ResumeLayout(false);
             this.procedureResultPage.ResumeLayout(false);
             this.procResultContextMenu.ResumeLayout(false);
+            this.tableResultContextMenu.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -444,5 +488,9 @@
         private System.Windows.Forms.ColumnHeader typeColumn;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.Button backButton;
+        private System.Windows.Forms.ToolTip backToolTip;
+        private System.Windows.Forms.Button forwardButton;
+        private System.Windows.Forms.Panel frequentServerPanel;
     }
 }
