@@ -493,7 +493,7 @@ namespace SQLSearcher
                 .ToDictionary(x => x.Key, x => x.Count());
 
             //Get the top 4 servers
-            var top = counts.OrderBy(x => x.Value)
+            var top = counts.OrderByDescending(x => x.Value)
                 .Select(x => x.Key)
                 .Take(4);
 

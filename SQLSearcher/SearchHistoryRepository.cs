@@ -84,7 +84,7 @@ namespace SQLSearcher
         /// <summary>
         /// Write the current search history to disk.
         /// </summary>
-        /// <param name="proceed">Determine if the action still needs to be performed after mutex is achieved.</param>
+        /// <param name="proceed">Determine if the action still needs to be performed after mutex is achieved. Cannot modify the history log.</param>
         /// <returns></returns>
         private async Task WriteSearchHistory(Func<bool> proceed = null)
         {
