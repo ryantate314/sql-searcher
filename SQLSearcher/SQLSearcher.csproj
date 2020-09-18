@@ -50,6 +50,12 @@
   <ItemGroup>
     <Compile Include="CacheLoader.cs" />
     <Compile Include="ColumnSearch.cs" />
+    <Compile Include="DefaultEditorMenuItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DefaultEditorMenuItem.Designer.cs">
+      <DependentUpon>DefaultEditorMenuItem.cs</DependentUpon>
+    </Compile>
     <Compile Include="FullSearch.cs" />
     <Compile Include="Models\ColumnSearchResult.cs" />
     <Compile Include="Models\SearchResultViewModel.cs" />
@@ -82,6 +88,7 @@
     </Compile>
     <EmbeddedResource Include="SearchForm.resx">
       <DependentUpon>SearchForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
