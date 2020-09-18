@@ -9,6 +9,7 @@ namespace SQLSearcher
 {
     static class TempFileRepo
     {
+        public static string commandName = "notepad++";
 
         public static string CreateNewFile(string contents, string fileName)
         {
@@ -27,7 +28,7 @@ namespace SQLSearcher
 
         public static void StartNPP(string path)
         {
-            string command = $"/C start notepad++ \"{path}\"";
+            string command = $"/C start {commandName} \"{path}\"";
             System.Diagnostics.Process.Start("CMD.exe", command);
         }
     }

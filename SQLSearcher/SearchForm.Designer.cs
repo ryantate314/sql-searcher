@@ -39,9 +39,7 @@
             this.searchResultsTabControl = new System.Windows.Forms.TabControl();
             this.tableResultPage = new System.Windows.Forms.TabPage();
             this.tableSearchResults = new System.Windows.Forms.ListView();
-            this.tableResultContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.viewColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.selectTop1000ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.typeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnResultPage = new System.Windows.Forms.TabPage();
             this.columnSearchResults = new System.Windows.Forms.ListView();
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -59,14 +57,23 @@
             this.columnHeader10 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.procResultContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.viewProcTextMenuStripOption = new System.Windows.Forms.ToolStripMenuItem();
+            this.tableResultContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.viewColumnsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.selectTop1000ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.showViewCreateScriptMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.searchButton = new System.Windows.Forms.Button();
-            this.showViewCreateScriptMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.typeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.statusStrip = new System.Windows.Forms.StatusStrip();
             this.statusLabel = new System.Windows.Forms.ToolStripStatusLabel();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultEditorToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.notepad = new SQLSearcher.DefaultEditorMenuItem();
+            this.vscode = new SQLSearcher.DefaultEditorMenuItem();
+            this.vim = new SQLSearcher.DefaultEditorMenuItem();
+            this.atom = new SQLSearcher.DefaultEditorMenuItem();
             databaseColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             schemaColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             tableCoumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -74,11 +81,12 @@
             columnDatabaseColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.searchResultsTabControl.SuspendLayout();
             this.tableResultPage.SuspendLayout();
-            this.tableResultContextMenu.SuspendLayout();
             this.columnResultPage.SuspendLayout();
             this.procedureResultPage.SuspendLayout();
             this.procResultContextMenu.SuspendLayout();
+            this.tableResultContextMenu.SuspendLayout();
             this.statusStrip.SuspendLayout();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // databaseColumn
@@ -108,17 +116,19 @@
             // 
             // serverName
             // 
-            this.serverName.Location = new System.Drawing.Point(12, 34);
+            this.serverName.Location = new System.Drawing.Point(16, 55);
+            this.serverName.Margin = new System.Windows.Forms.Padding(4);
             this.serverName.Name = "serverName";
-            this.serverName.Size = new System.Drawing.Size(171, 20);
+            this.serverName.Size = new System.Drawing.Size(227, 22);
             this.serverName.TabIndex = 0;
             this.serverName.Leave += new System.EventHandler(this.ServerName_Leave);
             // 
             // searchBox
             // 
-            this.searchBox.Location = new System.Drawing.Point(12, 76);
+            this.searchBox.Location = new System.Drawing.Point(16, 107);
+            this.searchBox.Margin = new System.Windows.Forms.Padding(4);
             this.searchBox.Name = "searchBox";
-            this.searchBox.Size = new System.Drawing.Size(363, 20);
+            this.searchBox.Size = new System.Drawing.Size(483, 22);
             this.searchBox.TabIndex = 1;
             this.searchBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.searchBox_KeyDown);
             // 
@@ -130,19 +140,21 @@
             this.searchResultsTabControl.Controls.Add(this.tableResultPage);
             this.searchResultsTabControl.Controls.Add(this.columnResultPage);
             this.searchResultsTabControl.Controls.Add(this.procedureResultPage);
-            this.searchResultsTabControl.Location = new System.Drawing.Point(0, 217);
+            this.searchResultsTabControl.Location = new System.Drawing.Point(0, 280);
+            this.searchResultsTabControl.Margin = new System.Windows.Forms.Padding(4);
             this.searchResultsTabControl.Name = "searchResultsTabControl";
             this.searchResultsTabControl.SelectedIndex = 0;
-            this.searchResultsTabControl.Size = new System.Drawing.Size(935, 348);
+            this.searchResultsTabControl.Size = new System.Drawing.Size(1247, 428);
             this.searchResultsTabControl.TabIndex = 2;
             // 
             // tableResultPage
             // 
             this.tableResultPage.Controls.Add(this.tableSearchResults);
-            this.tableResultPage.Location = new System.Drawing.Point(4, 22);
+            this.tableResultPage.Location = new System.Drawing.Point(4, 25);
+            this.tableResultPage.Margin = new System.Windows.Forms.Padding(4);
             this.tableResultPage.Name = "tableResultPage";
-            this.tableResultPage.Padding = new System.Windows.Forms.Padding(3);
-            this.tableResultPage.Size = new System.Drawing.Size(927, 322);
+            this.tableResultPage.Padding = new System.Windows.Forms.Padding(4);
+            this.tableResultPage.Size = new System.Drawing.Size(1239, 399);
             this.tableResultPage.TabIndex = 0;
             this.tableResultPage.Text = "Table";
             this.tableResultPage.UseVisualStyleBackColor = true;
@@ -157,43 +169,28 @@
             reasonColumn});
             this.tableSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableSearchResults.FullRowSelect = true;
-            this.tableSearchResults.Location = new System.Drawing.Point(3, 3);
+            this.tableSearchResults.HideSelection = false;
+            this.tableSearchResults.Location = new System.Drawing.Point(4, 4);
+            this.tableSearchResults.Margin = new System.Windows.Forms.Padding(4);
             this.tableSearchResults.Name = "tableSearchResults";
-            this.tableSearchResults.Size = new System.Drawing.Size(921, 316);
+            this.tableSearchResults.Size = new System.Drawing.Size(1231, 391);
             this.tableSearchResults.TabIndex = 0;
             this.tableSearchResults.UseCompatibleStateImageBehavior = false;
             this.tableSearchResults.View = System.Windows.Forms.View.Details;
             this.tableSearchResults.MouseClick += new System.Windows.Forms.MouseEventHandler(this.tableSearchResults_MouseClick);
             // 
-            // tableResultContextMenu
+            // typeColumn
             // 
-            this.tableResultContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.viewColumnsToolStripMenuItem,
-            this.selectTop1000ToolStripMenuItem,
-            this.showViewCreateScriptMenuItem});
-            this.tableResultContextMenu.Name = "tableResultContextMenu";
-            this.tableResultContextMenu.Size = new System.Drawing.Size(174, 70);
-            // 
-            // viewColumnsToolStripMenuItem
-            // 
-            this.viewColumnsToolStripMenuItem.Name = "viewColumnsToolStripMenuItem";
-            this.viewColumnsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.viewColumnsToolStripMenuItem.Text = "View Columns";
-            this.viewColumnsToolStripMenuItem.Click += new System.EventHandler(this.ViewColumnsToolStripMenuItem_Click);
-            // 
-            // selectTop1000ToolStripMenuItem
-            // 
-            this.selectTop1000ToolStripMenuItem.Enabled = false;
-            this.selectTop1000ToolStripMenuItem.Name = "selectTop1000ToolStripMenuItem";
-            this.selectTop1000ToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.selectTop1000ToolStripMenuItem.Text = "Select Top 1000";
+            this.typeColumn.Text = "Type";
+            this.typeColumn.Width = 74;
             // 
             // columnResultPage
             // 
             this.columnResultPage.Controls.Add(this.columnSearchResults);
-            this.columnResultPage.Location = new System.Drawing.Point(4, 22);
+            this.columnResultPage.Location = new System.Drawing.Point(4, 25);
+            this.columnResultPage.Margin = new System.Windows.Forms.Padding(4);
             this.columnResultPage.Name = "columnResultPage";
-            this.columnResultPage.Size = new System.Drawing.Size(927, 322);
+            this.columnResultPage.Size = new System.Drawing.Size(1239, 399);
             this.columnResultPage.TabIndex = 2;
             this.columnResultPage.Text = "Columns";
             this.columnResultPage.UseVisualStyleBackColor = true;
@@ -212,9 +209,11 @@
             this.fkColumn,
             this.columnHeader4});
             this.columnSearchResults.FullRowSelect = true;
-            this.columnSearchResults.Location = new System.Drawing.Point(3, 3);
+            this.columnSearchResults.HideSelection = false;
+            this.columnSearchResults.Location = new System.Drawing.Point(4, 17);
+            this.columnSearchResults.Margin = new System.Windows.Forms.Padding(4);
             this.columnSearchResults.Name = "columnSearchResults";
-            this.columnSearchResults.Size = new System.Drawing.Size(927, 316);
+            this.columnSearchResults.Size = new System.Drawing.Size(1235, 388);
             this.columnSearchResults.TabIndex = 1;
             this.columnSearchResults.UseCompatibleStateImageBehavior = false;
             this.columnSearchResults.View = System.Windows.Forms.View.Details;
@@ -252,10 +251,11 @@
             // procedureResultPage
             // 
             this.procedureResultPage.Controls.Add(this.procedureSearchResults);
-            this.procedureResultPage.Location = new System.Drawing.Point(4, 22);
+            this.procedureResultPage.Location = new System.Drawing.Point(4, 25);
+            this.procedureResultPage.Margin = new System.Windows.Forms.Padding(4);
             this.procedureResultPage.Name = "procedureResultPage";
-            this.procedureResultPage.Padding = new System.Windows.Forms.Padding(3);
-            this.procedureResultPage.Size = new System.Drawing.Size(927, 322);
+            this.procedureResultPage.Padding = new System.Windows.Forms.Padding(4);
+            this.procedureResultPage.Size = new System.Drawing.Size(1239, 399);
             this.procedureResultPage.TabIndex = 1;
             this.procedureResultPage.Text = "Stored Procedures";
             this.procedureResultPage.UseVisualStyleBackColor = true;
@@ -271,9 +271,11 @@
             this.procedureSearchResults.ContextMenuStrip = this.procResultContextMenu;
             this.procedureSearchResults.Dock = System.Windows.Forms.DockStyle.Fill;
             this.procedureSearchResults.FullRowSelect = true;
-            this.procedureSearchResults.Location = new System.Drawing.Point(3, 3);
+            this.procedureSearchResults.HideSelection = false;
+            this.procedureSearchResults.Location = new System.Drawing.Point(4, 4);
+            this.procedureSearchResults.Margin = new System.Windows.Forms.Padding(4);
             this.procedureSearchResults.Name = "procedureSearchResults";
-            this.procedureSearchResults.Size = new System.Drawing.Size(921, 316);
+            this.procedureSearchResults.Size = new System.Drawing.Size(1231, 391);
             this.procedureSearchResults.TabIndex = 1;
             this.procedureSearchResults.UseCompatibleStateImageBehavior = false;
             this.procedureSearchResults.View = System.Windows.Forms.View.Details;
@@ -303,24 +305,57 @@
             // 
             // procResultContextMenu
             // 
+            this.procResultContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.procResultContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewProcTextMenuStripOption});
             this.procResultContextMenu.Name = "procResultContextMenu";
-            this.procResultContextMenu.Size = new System.Drawing.Size(124, 26);
+            this.procResultContextMenu.Size = new System.Drawing.Size(142, 28);
             // 
             // viewProcTextMenuStripOption
             // 
             this.viewProcTextMenuStripOption.Name = "viewProcTextMenuStripOption";
-            this.viewProcTextMenuStripOption.Size = new System.Drawing.Size(123, 22);
+            this.viewProcTextMenuStripOption.Size = new System.Drawing.Size(141, 24);
             this.viewProcTextMenuStripOption.Text = "View Text";
             this.viewProcTextMenuStripOption.Click += new System.EventHandler(this.viewProcTextMenuStripOption_Click);
+            // 
+            // tableResultContextMenu
+            // 
+            this.tableResultContextMenu.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.tableResultContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.viewColumnsToolStripMenuItem,
+            this.selectTop1000ToolStripMenuItem,
+            this.showViewCreateScriptMenuItem});
+            this.tableResultContextMenu.Name = "tableResultContextMenu";
+            this.tableResultContextMenu.Size = new System.Drawing.Size(204, 76);
+            // 
+            // viewColumnsToolStripMenuItem
+            // 
+            this.viewColumnsToolStripMenuItem.Name = "viewColumnsToolStripMenuItem";
+            this.viewColumnsToolStripMenuItem.Size = new System.Drawing.Size(203, 24);
+            this.viewColumnsToolStripMenuItem.Text = "View Columns";
+            this.viewColumnsToolStripMenuItem.Click += new System.EventHandler(this.ViewColumnsToolStripMenuItem_Click);
+            // 
+            // selectTop1000ToolStripMenuItem
+            // 
+            this.selectTop1000ToolStripMenuItem.Enabled = false;
+            this.selectTop1000ToolStripMenuItem.Name = "selectTop1000ToolStripMenuItem";
+            this.selectTop1000ToolStripMenuItem.Size = new System.Drawing.Size(203, 24);
+            this.selectTop1000ToolStripMenuItem.Text = "Select Top 1000";
+            // 
+            // showViewCreateScriptMenuItem
+            // 
+            this.showViewCreateScriptMenuItem.Name = "showViewCreateScriptMenuItem";
+            this.showViewCreateScriptMenuItem.Size = new System.Drawing.Size(203, 24);
+            this.showViewCreateScriptMenuItem.Text = "Show Create Script";
+            this.showViewCreateScriptMenuItem.Click += new System.EventHandler(this.showCreateScriptToolStripMenuItem_Click);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(12, 99);
+            this.label1.Location = new System.Drawing.Point(16, 135);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(198, 52);
+            this.label1.Size = new System.Drawing.Size(262, 68);
             this.label1.TabIndex = 3;
             this.label1.Text = "Example Searches:\r\n\r\nSearch columns: DbName.dbo.*.chart\r\nSearch tables and procs:" +
     " DbName.dbo.*";
@@ -328,26 +363,29 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 60);
+            this.label2.Location = new System.Drawing.Point(12, 87);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(68, 13);
+            this.label2.Size = new System.Drawing.Size(90, 17);
             this.label2.TabIndex = 4;
             this.label2.Text = "Search Term";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 18);
+            this.label3.Location = new System.Drawing.Point(16, 35);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(38, 13);
+            this.label3.Size = new System.Drawing.Size(50, 17);
             this.label3.TabIndex = 5;
             this.label3.Text = "Server";
             // 
             // searchButton
             // 
-            this.searchButton.Location = new System.Drawing.Point(381, 76);
+            this.searchButton.Location = new System.Drawing.Point(508, 107);
+            this.searchButton.Margin = new System.Windows.Forms.Padding(4);
             this.searchButton.Name = "searchButton";
-            this.searchButton.Size = new System.Drawing.Size(75, 23);
+            this.searchButton.Size = new System.Drawing.Size(100, 28);
             this.searchButton.TabIndex = 6;
             this.searchButton.Text = "Search";
             this.searchButton.UseVisualStyleBackColor = true;
@@ -355,36 +393,87 @@
             // 
             // statusStrip
             // 
+            this.statusStrip.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.statusStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.statusLabel});
-            this.statusStrip.Location = new System.Drawing.Point(0, 568);
+            this.statusStrip.Location = new System.Drawing.Point(0, 704);
             this.statusStrip.Name = "statusStrip";
-            this.statusStrip.Size = new System.Drawing.Size(935, 22);
+            this.statusStrip.Padding = new System.Windows.Forms.Padding(1, 0, 19, 0);
+            this.statusStrip.Size = new System.Drawing.Size(1247, 22);
             this.statusStrip.TabIndex = 7;
             // 
             // statusLabel
             // 
             this.statusLabel.Name = "statusLabel";
-            this.statusLabel.Size = new System.Drawing.Size(0, 17);
+            this.statusLabel.Size = new System.Drawing.Size(0, 16);
             // 
-            // showViewCreateScriptMenuItem
+            // menuStrip1
             // 
-            this.showViewCreateScriptMenuItem.Name = "showViewCreateScriptMenuItem";
-            this.showViewCreateScriptMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.showViewCreateScriptMenuItem.Text = "Show Create Script";
-            this.showViewCreateScriptMenuItem.Click += new System.EventHandler(this.showCreateScriptToolStripMenuItem_Click);
+            this.menuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.optionsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(1559, 38);
+            this.menuStrip1.TabIndex = 8;
+            this.menuStrip1.Text = "menuStrip1";
             // 
-            // typeColumn
+            // optionsToolStripMenuItem
             // 
-            this.typeColumn.Text = "Type";
-            this.typeColumn.Width = 74;
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.defaultEditorToolStripMenuItem});
+            this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(75, 34);
+            this.optionsToolStripMenuItem.Text = "Options";
+            // 
+            // defaultEditorToolStripMenuItem
+            // 
+            this.defaultEditorToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.notepad,
+            this.vim,
+            this.atom,
+            this.vscode});
+            this.defaultEditorToolStripMenuItem.Name = "defaultEditorToolStripMenuItem";
+            this.defaultEditorToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.defaultEditorToolStripMenuItem.Text = "Default Editor";
+            // 
+            // notepad
+            // 
+            this.notepad.Checked = true;
+            this.notepad.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.notepad.Command = null;
+            this.notepad.Name = "notepad";
+            this.notepad.Size = new System.Drawing.Size(224, 26);
+            this.notepad.Text = "Notepad++";
+            // 
+            // vscode
+            // 
+            this.vscode.Command = "code";
+            this.vscode.Name = "vscode";
+            this.vscode.Size = new System.Drawing.Size(224, 26);
+            this.vscode.Text = "VSCode";
+            // 
+            // vim
+            // 
+            this.vim.Command = "vim";
+            this.vim.Name = "vim";
+            this.vim.Size = new System.Drawing.Size(224, 26);
+            this.vim.Text = "Vim";
+            // 
+            // atom
+            // 
+            this.atom.Command = "atom";
+            this.atom.Name = "atom";
+            this.atom.Size = new System.Drawing.Size(224, 26);
+            this.atom.Text = "Atom";
             // 
             // SearchForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(935, 590);
+            this.ClientSize = new System.Drawing.Size(1247, 726);
             this.Controls.Add(this.statusStrip);
+            this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.searchButton);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -393,17 +482,21 @@
             this.Controls.Add(this.searchBox);
             this.Controls.Add(this.serverName);
             this.KeyPreview = true;
+            this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "SearchForm";
             this.Text = "SearchForm";
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SearchForm_KeyDown);
             this.searchResultsTabControl.ResumeLayout(false);
             this.tableResultPage.ResumeLayout(false);
-            this.tableResultContextMenu.ResumeLayout(false);
             this.columnResultPage.ResumeLayout(false);
             this.procedureResultPage.ResumeLayout(false);
             this.procResultContextMenu.ResumeLayout(false);
+            this.tableResultContextMenu.ResumeLayout(false);
             this.statusStrip.ResumeLayout(false);
             this.statusStrip.PerformLayout();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -444,5 +537,12 @@
         private System.Windows.Forms.ColumnHeader typeColumn;
         private System.Windows.Forms.StatusStrip statusStrip;
         private System.Windows.Forms.ToolStripStatusLabel statusLabel;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultEditorToolStripMenuItem;
+        private DefaultEditorMenuItem notepad;
+        private DefaultEditorMenuItem vscode;
+        private DefaultEditorMenuItem vim;
+        private DefaultEditorMenuItem atom;
     }
 }
